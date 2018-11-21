@@ -1,5 +1,7 @@
 package io.scalableapps.games.cl;
 
+import javax.management.relation.Role;
+
 public class Player {
 	private int currentPostion;
 	private String name;
@@ -13,8 +15,19 @@ public class Player {
 			this.currentPostion=this.currentPostion + lastRoll;
 			return;
 		}
+		System.out.println("this.currentPostion : "+this.currentPostion+" "+lastRoll);
+		;
+		
 		Square square=board.getSquare(this.currentPostion+lastRoll);
+		System.out.println("this.currentPostion : "+this.currentPostion+" "+lastRoll);
+		;
+		
+		
 		Path path= square.hasLadder() ? square.getLadder(): square.getSnake();
+		if(path!=null) {
+			System.out.println("path is "+path.toString());
+				
+		}
 		this.currentPostion=square.hasSnakeOrLadder()? path.getDestination():square.getPosition();
 	}
 	public int getCurrentPostion() {

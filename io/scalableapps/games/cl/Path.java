@@ -10,6 +10,10 @@ abstract class  Path {
 	public int getDestination() {
 		return destination;
 	}
+	@Override
+	public String toString() {
+		return "Path [source=" + source + ", destination=" + destination + "]";
+	}
 	
 	
 }
