@@ -8,6 +8,7 @@ public class PlayerStats {
    String playerName;
    int previousPosition;
    int currentPosition;
+   boolean winner;
 public int getCounter() {
 	return counter;
 }
@@ -49,6 +50,13 @@ public int getCurrentPosition() {
 }
 public void setCurrentPosition(int currentPosition) {
 	this.currentPosition = currentPosition;
+}
+
+public boolean isWinner() {
+	return winner;
+}
+public void setWinner(boolean winner) {
+	this.winner = winner;
 }
 @Override
 public String toString() {

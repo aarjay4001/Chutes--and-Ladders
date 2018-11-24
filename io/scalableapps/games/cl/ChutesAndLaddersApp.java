@@ -39,21 +39,27 @@ public class ChutesAndLaddersApp {
 				}
 				//System.out.println("square.hasSnakeOrLadder() "+square.hasSnakeOrLadder());
 				StringBuilder sb = new  StringBuilder();
+				
 				PlayerStats st = new PlayerStats();
-				st.setCounter(counter);
+				st.setCounter(++counter);
 				st.setPlayerName(player.getName());
 				st.setPreviousPosition(currentPosition);
-				st.setPreviousPosition(player.getCurrentPostion());
+				st.setCurrentPosition(player.getCurrentPostion());
 				
-				processPrintReport(++counter, player, currentPosition,sb);	
+				
+				processPrintReport(counter, player, currentPosition,sb);	
 				if(square.hasSnakeOrLadder()) {
 					Path path= square.hasLadder() ? square.getLadder(): square.getSnake();
-					player.adjustChuteOrLadder(path.getDestination());
+					st.setLadder(square.hasLadder());
+					st.setLadder(square.hasSnake());
+					st.setAdjustedCurrentPositionWithLadderAndChute(path.getDestination());
 					sb.append(" --").append(square.hasLadder()? " LADDER " : " CHUTE ").append(" --> ").append(path.getDestination());
 				}
+				playersStats.add(st);
 				System.out.println(sb.toString());
 				if(player.getCurrentPostion()==board.getWinnigSquareIndex()) {
 					winner=true;
+					st.setWinner(true);
 					System.out.println("Winner is "+player.getName()+ " ");
 					break;
 				}
@@ -62,6 +68,13 @@ public class ChutesAndLaddersApp {
 			
 			
 		}
+		System.out.println("\n\n Print Report \n\n");
+		playersStats.forEach(playerStat -> {
+		    System.out.println(playerStat.toString());
+		    if(playerStat.isWinner()) {
+		    	 System.out.println(playerStat.getPlayerName()+" is winner");
+		    }
+		});
 		
 		
 	}
