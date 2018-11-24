@@ -18,11 +18,11 @@ public class Board {
 	}
 
 	public void init(int maxSquare) {
-		for (int i=0;i<maxSquare-1;i++) {
+		for (int i=0;i<=maxSquare;i++) {
 			board.put(i, new Square(i));
 		}
-		//addLadders();
-		//addSnakes();
+		addLadders();
+		addSnakes();
 	}
 	public void addChutes(int start, int end) {
 		addPath(start, end);

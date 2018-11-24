@@ -1,18 +1,17 @@
 package io.scalableapps.games.cl;
 
 import java.util.ArrayList;
-
-
 import java.util.List;
+import java.util.Scanner;
 
 public class ChutesAndLaddersApp {
 	private static final int MAX_SQUARES = 100;
 
 	public static void main(String []args) {
-
-		String [] arr= {"Ram", "Rahim", "sita","Gita"};
+		System.out.println("Plese enter players name seprated by , eg Peter, Sam, Joseph ");	
+		Scanner scanner = new Scanner(System.in);
+		String [] arr =scanner.nextLine().split(",");
 		List<Player> players = new ArrayList<Player>();
-		
 		for(String player:arr) {
 			players.add(new Player(player));
 		}
@@ -21,33 +20,54 @@ public class ChutesAndLaddersApp {
 		board.init(MAX_SQUARES);
 		boolean winner=false;
 		int counter=0;
+		System.out.println("Start : Player status");
+		for(Player player:players) {
+			System.out.println(player.getName()+" : "+(player.getCurrentPostion()));
+	    }
+		List<PlayerStats> playersStats= new ArrayList<>();
 		while(!winner) {
+			
 			for(Player player:players) {
 				//System.out.println(player.toString()+ "turn");
 				int roll= dice.roll();
-				//System.out.println("Roll  "+roll);
+				//System.out.println(player.getName()+ " Roll  "+roll);
 				int currentPosition=player.getCurrentPostion();
-				player.move(board,roll);
+				Square square=player.move(board,roll);
+				
+				if(square==null) {
+					continue;
+				}
+				//System.out.println("square.hasSnakeOrLadder() "+square.hasSnakeOrLadder());
 				StringBuilder sb = new  StringBuilder();
-				sb.append(++counter+": "+player.getName()+": "+currentPosition+" --> "+player.getCurrentPostion());
-				//System.out.println(++counter+": "+player.getName()+": "+currentPosition+" --> "+player.getCurrentPostion());
-				System.out.println(sb.toString());	
-				if(player.getCurrentPostion()>=board.getWinnigSquareIndex()) {
+				PlayerStats st = new PlayerStats();
+				st.setCounter(counter);
+				st.setPlayerName(player.getName());
+				st.setPreviousPosition(currentPosition);
+				st.setPreviousPosition(player.getCurrentPostion());
+				
+				processPrintReport(++counter, player, currentPosition,sb);	
+				if(square.hasSnakeOrLadder()) {
+					Path path= square.hasLadder() ? square.getLadder(): square.getSnake();
+					player.adjustChuteOrLadder(path.getDestination());
+					sb.append(" --").append(square.hasLadder()? " LADDER " : " CHUTE ").append(" --> ").append(path.getDestination());
+				}
+				System.out.println(sb.toString());
+				if(player.getCurrentPostion()==board.getWinnigSquareIndex()) {
 					winner=true;
-					System.out.println("Winner is "+player.getName()+ " "+(player.getCurrentPostion()+1));
+					System.out.println("Winner is "+player.getName()+ " ");
+					break;
 				}
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 			}
 			
 			
 		}
 		
 		
+	}
+
+	private static void processPrintReport(int counter, Player player, int currentPosition, StringBuilder sb) {
+		sb.append(counter+": "+player.getName()+": "+(currentPosition) +" --> "+ (player.getCurrentPostion()));
 	}
 
 }
